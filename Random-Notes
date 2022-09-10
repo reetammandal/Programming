@@ -1,0 +1,10 @@
+Trie
+backtracking
+StringBuilder
+Memoization
+LRUCache
+
+
+  Arrays.sort(jobs, (a, b)->a[1] - b[1]);
+   TreeMap<Integer, Integer> dp = newTreeMap<>();
+
