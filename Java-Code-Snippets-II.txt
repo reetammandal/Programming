@@ -1,0 +1,71 @@
+Strings/Patterns/Groups
+String chunkIPv6 = "([0-9a-fA-F]{1,4})";
+  Pattern pattenIPv6 =
+          Pattern.compile("^(" + chunkIPv6 + "\\:){7}" + chunkIPv6 + "$");
+
+pattenIPv6.matcher(IP).matches()
+
+Str.matches("<regex>")
+
+
+
+String str;
+String[] stringslist = str.split("\\.", -1);
+str.length()
+str.toCharArray()
+str.indexOf(ch) == -1    ---> ch is not in str
+Boolean Character.isDigit(ch)
+Integer.parseInt(ch)
+
+String hexdigits = "0123456789abcdefABCDEF"
+
+String IP;
+IP.chars().filter(ch -> ch == '.').count()
+
+String Buffer
+
+Math:
+n = n << 1; // Multiply n with 2 
+n = n >> 1; // Divide n by 2 
+
+
+
+Most significant digit
+double K = Math.log10(input);
+K = K – Math.floor(K);
+int MSD = (int)Math.pow(10, K);
+
+noOfDigits = Math.floor(Math.log10(input)) + 1;
+
+Boolean isPowerOfTwo = x!=0 && ((x&(x-1)) == 0); 
+
+
+Basic:
+for (String x : nums) { }
+
+Basics
+
+char[][] chaseboard= new char[n][n];
+
+	
+
+List<List<Integer>> jobs = new ArrayList<>();
+int length = array.length;
+Int length = list.size();
+
+int start = 2dlist.get(i).get(0)
+
+
+Arrays.fill(arrayname, -1);
+
+
+List<User> list
+            = Arrays.asList(object2, object1, object4, object3);
+
+
+int minprice = Integer.MAX_VALUE;
+Integer. MAX_VALUE represents the maximum positive integer value that can be represented in 32 bits (i.e., 2147483647 
+
+
+
+
