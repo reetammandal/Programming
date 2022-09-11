@@ -8,3 +8,63 @@ LRUCache
   Arrays.sort(jobs, (a, b)->a[1] - b[1]);
    TreeMap<Integer, Integer> dp = newTreeMap<>();
 
+ 
+
+Vector 
+
+https://www.javatpoint.com/java-vector 
+
+https://www.tutorialspoint.com/java/java_vector_class.htm 
+
+ 
+
+ArrayList 
+
+The ArrayList class is a resizable array( 
+
+size of an array cannot be modified) 
+
+ 
+
+ 
+
+Lightbox
+https://www.geeksforgeeks.org/collections-in-java-2/ 
+
+ 
+
+ 
+
+ 
+
+Regex 
+
+Patternpattern =Pattern.compile("w3schools",Pattern.CASE_INSENSITIVE);Matchermatcher =pattern.matcher("Visit W3Schools!");booleanmatchFound =matcher.find(); 
+
+ 
+
+Lambda 
+
+(parameter1,parameter2)->{code block } 
+
+(parameter1,parameter2)->expression 
+
+ 
+
+ArrayList<Integer>numbers =newArrayList<Integer>(); 
+
+numbers.add(5); 
+
+numbers.add(9); 
+
+numbers.add(8); 
+
+numbers.add(1); 
+
+numbers.forEach((n)->{System.out.println(n);}); 
+
+ 
+
+ 
+
+https://www.baeldung.com/java-collections 
