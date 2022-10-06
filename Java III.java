@@ -250,3 +250,239 @@ con.getHeaderFields().entrySet().stream()
       fullResponseBuilder.append("\n");
 });
 
+
+Array to stream
+
+private static Employee[] arrayOfEmps = {
+    new Employee(1, "Jeff Bezos", 100000.0), 
+    new Employee(2, "Bill Gates", 200000.0), 
+    new Employee(3, "Mark Zuckerberg", 300000.0)
+};
+
+Stream.of(arrayOfEmps);
+
+private static List<Employee> empList = Arrays.asList(arrayOfEmps);
+empList.stream();
+
+Stream.of(arrayOfEmps[0], arrayOfEmps[1], arrayOfEmps[2]);
+
+
+
+Stream.Builder<Employee> empStreamBuilder = Stream.builder();
+
+empStreamBuilder.accept(arrayOfEmps[0]);
+empStreamBuilder.accept(arrayOfEmps[1]);
+empStreamBuilder.accept(arrayOfEmps[2]);
+
+Stream<Employee> empStream = empStreamBuilder.build();
+
+@Test
+public void whenIncrementSalaryForEachEmployee_thenApplyNewSalary() {    
+    empList.stream().forEach(e -> e.salaryIncrement(10.0));
+    
+    assertThat(empList, contains(
+      hasProperty("salary", equalTo(110000.0)),
+      hasProperty("salary", equalTo(220000.0)),
+      hasProperty("salary", equalTo(330000.0))
+    ));
+}
+
+
+@Test
+public void whenMapIdToEmployees_thenGetEmployeeStream() {
+    Integer[] empIds = { 1, 2, 3 };
+    
+    List<Employee> employees = Stream.of(empIds)
+      .map(employeeRepository::findById)
+      .collect(Collectors.toList());
+    
+    assertEquals(employees.size(), empIds.length);
+}
+
+
+@Test
+public void whenCollectStreamToList_thenGetList() {
+    List<Employee> employees = empList.stream().collect(Collectors.toList());
+    
+    assertEquals(empList, employees);
+}
+
+@Test
+public void whenFilterEmployees_thenGetFilteredStream() {
+    Integer[] empIds = { 1, 2, 3, 4 };
+    
+    List<Employee> employees = Stream.of(empIds)
+      .map(employeeRepository::findById)
+      .filter(e -> e != null)
+      .filter(e -> e.getSalary() > 200000)
+      .collect(Collectors.toList());
+    
+    assertEquals(Arrays.asList(arrayOfEmps[2]), employees);
+}
+
+
+
+@Test
+public void whenFindFirst_thenGetFirstEmployeeInStream() {
+    Integer[] empIds = { 1, 2, 3, 4 };
+    
+    Employee employee = Stream.of(empIds)
+      .map(employeeRepository::findById)
+      .filter(e -> e != null)
+      .filter(e -> e.getSalary() > 100000)
+      .findFirst()
+      .orElse(null);
+    
+    assertEquals(employee.getSalary(), new Double(200000));
+}
+
+
+
+@Test
+public void whenStreamToArray_thenGetArray() {
+    Employee[] employees = empList.stream().toArray(Employee[]::new);
+
+    assertThat(empList.toArray(), equalTo(employees));
+}
+
+
+@Test
+public void whenFlatMapEmployeeNames_thenGetNameStream() {
+    List<List<String>> namesNested = Arrays.asList( 
+      Arrays.asList("Jeff", "Bezos"), 
+      Arrays.asList("Bill", "Gates"), 
+      Arrays.asList("Mark", "Zuckerberg"));
+
+    List<String> namesFlatStream = namesNested.stream()
+      .flatMap(Collection::stream)
+      .collect(Collectors.toList());
+
+    assertEquals(namesFlatStream.size(), namesNested.size() * 2);
+}
+
+@Test
+public void whenIncrementSalaryUsingPeek_thenApplyNewSalary() {
+    Employee[] arrayOfEmps = {
+        new Employee(1, "Jeff Bezos", 100000.0), 
+        new Employee(2, "Bill Gates", 200000.0), 
+        new Employee(3, "Mark Zuckerberg", 300000.0)
+    };
+
+    List<Employee> empList = Arrays.asList(arrayOfEmps);
+    
+    empList.stream()
+      .peek(e -> e.salaryIncrement(10.0))
+      .peek(System.out::println)
+      .collect(Collectors.toList());
+
+    assertThat(empList, contains(
+      hasProperty("salary", equalTo(110000.0)),
+      hasProperty("salary", equalTo(220000.0)),
+      hasProperty("salary", equalTo(330000.0))
+    ));
+}
+
+@Test
+public void whenStreamCount_thenGetElementCount() {
+    Long empCount = empList.stream()
+      .filter(e -> e.getSalary() > 200000)
+      .count();
+
+    assertEquals(empCount, new Long(1));
+}
+
+@Test
+public void whenLimitInfiniteStream_thenGetFiniteElements() {
+    Stream<Integer> infiniteStream = Stream.iterate(2, i -> i * 2);
+
+    List<Integer> collect = infiniteStream
+      .skip(3)
+      .limit(5)
+      .collect(Collectors.toList());
+
+    assertEquals(collect, Arrays.asList(16, 32, 64, 128, 256));
+         
+         
+@Test
+public void whenFindFirst_thenGetFirstEmployeeInStream() {
+    Integer[] empIds = { 1, 2, 3, 4 };
+    
+    Employee employee = Stream.of(empIds)
+      .map(employeeRepository::findById)
+      .filter(e -> e != null)
+      .filter(e -> e.getSalary() > 100000)
+      .findFirst()
+      .orElse(null);
+    
+    assertEquals(employee.getSalary(), new Double(200000));
+}
+         
+@Test
+public void whenSortStream_thenGetSortedStream() {
+    List<Employee> employees = empList.stream()
+      .sorted((e1, e2) -> e1.getName().compareTo(e2.getName()))
+      .collect(Collectors.toList());
+
+    assertEquals(employees.get(0).getName(), "Bill Gates");
+    assertEquals(employees.get(1).getName(), "Jeff Bezos");
+    assertEquals(employees.get(2).getName(), "Mark Zuckerberg");
+}
+         
+@Test
+public void whenFindMin_thenGetMinElementFromStream() {
+    Employee firstEmp = empList.stream()
+      .min((e1, e2) -> e1.getId() - e2.getId())
+      .orElseThrow(NoSuchElementException::new);
+
+    assertEquals(firstEmp.getId(), new Integer(1));
+}
+         
+
+@Test
+public void whenFindMax_thenGetMaxElementFromStream() {
+    Employee maxSalEmp = empList.stream()
+      .max(Comparator.comparing(Employee::getSalary))
+      .orElseThrow(NoSuchElementException::new);
+
+    assertEquals(maxSalEmp.getSalary(), new Double(300000.0));
+}
+         
+@Test
+public void whenApplyDistinct_thenRemoveDuplicatesFromStream() {
+    List<Integer> intList = Arrays.asList(2, 5, 3, 2, 4, 3);
+    List<Integer> distinctIntList = intList.stream().distinct().collect(Collectors.toList());
+    
+    assertEquals(distinctIntList, Arrays.asList(2, 5, 3, 4));
+}
+         
+@Test
+public void whenApplyMatch_thenReturnBoolean() {
+    List<Integer> intList = Arrays.asList(2, 4, 5, 6, 8);
+    
+    boolean allEven = intList.stream().allMatch(i -> i % 2 == 0);
+    boolean oneEven = intList.stream().anyMatch(i -> i % 2 == 0);
+    boolean noneMultipleOfThree = intList.stream().noneMatch(i -> i % 3 == 0);
+    
+    assertEquals(allEven, false);
+    assertEquals(oneEven, true);
+    assertEquals(noneMultipleOfThree, false);
+}
+         
+empList.stream().map(Employee::getId);
+         
+@Test
+public void whenApplySumOnIntStream_thenGetSum() {
+    Double avgSal = empList.stream()
+      .mapToDouble(Employee::getSalary)
+      .average()
+      .orElseThrow(NoSuchElementException::new);
+    
+    assertEquals(avgSal, new Double(200000));
+}
+         
+         
+String[][] stringArray = mainList.stream().map(u -> u.toArray(new String[0])).toArray(String[][]::new);
+
+         
+
+
